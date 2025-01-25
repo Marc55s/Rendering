@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include "lorenz.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -112,7 +111,7 @@ int main(void) {
 
     //Lorenz_sys *system = init(a,b,c,t,x,y,z);
     int systems_amount = 10;
-    Lorenz_sys **systems = (Lorenz_sys**)MemAlloc(sizeof(Lorenz_sys*) * 3);
+    Lorenz_sys **systems = (Lorenz_sys**)MemAlloc(sizeof(Lorenz_sys*) * systems_amount);
 
     for (int i = 0; i < systems_amount; i++) {
         systems[i] = init(a,b-(i/5.0f),c+i,t,x,y+(i/20.0f),z);

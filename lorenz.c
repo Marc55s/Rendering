@@ -1,7 +1,8 @@
 #include "lorenz.h"
+#include "raylib.h"
 
 Lorenz_sys *init(double sig, double rho, double beta,double time, double x, double y, double z){
-    Lorenz_sys *system = MemAlloc(sizeof(Lorenz_sys));
+    Lorenz_sys *system = (Lorenz_sys *) MemAlloc(sizeof(Lorenz_sys));
     system->x = x;
     system->y = y;
     system->z = z;

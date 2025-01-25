@@ -14,6 +14,7 @@ set(CMAKE_C_COMPILER ${CC})
 # Other CMake configuration...
 # Include Raylib headers
 include_directories(${RAYLIB_INCLUDE})
+include_directories("/nix/store/lw21wr626v5sdcaxxkv2k4zf1121hfc9-glibc-2.40-36-dev/include")
 
 # Source files
 file(GLOB SRC_FILES "*.c")

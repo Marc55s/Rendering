@@ -34,11 +34,10 @@
                     export CC=${pkgs.gcc}/bin/gcc
                     export RAYLIB_INCLUDE=${pkgs.raylib}/include
                     export RAYLIB_LIB=${pkgs.raylib}/lib
-                    export CC=${pkgs.gcc}/bin/gcc
                     export CFLAGS="-I${pkgs.raylib}/include"
                     export LDFLAGS="-L${pkgs.raylib}/lib"
-
-                echo "Welcome to the development shell with GCC, Make, CMake and Raylib!";
+                    export C_INCLUDE_PATH=/nix/store/isxsfmzsxsh1xa3lyh66zkv8w0qziai8-clang-19.1.5-lib/lib/clang/19/include
+                    echo "Welcome to the development shell with GCC, Make, CMake and Raylib!";
                 '';
             };
 
