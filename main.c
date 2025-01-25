@@ -1,9 +1,12 @@
+#include "stdio.h"
+#include "lorenz.h"
 #include "raylib.h"
 #include "raymath.h"
 
 void camera_move(Camera3D *camera) {
 
     //TraceLog(LOG_INFO, "(%f %f %f) l = %f",camera->target.x,camera->target.y,camera->target.z,Vector3Length(camera->target));
+
 
     // Step 1: Calculate forward direction from camera position to target
     Vector3 forward = Vector3Normalize(Vector3Subtract(camera->target, camera->position));
@@ -58,15 +61,15 @@ void camera_move(Camera3D *camera) {
     float pitch = -y_dir * sensitivity;
     right = Vector3Normalize(right);
 
-// Rotate the forward vector around the up axis (yaw)
+    // Rotate the forward vector around the up axis (yaw)
     Matrix yawRotation = MatrixRotate(camera->up, yaw);
     Vector3 forwardYawed = Vector3Transform(forward, yawRotation);
 
-// Rotate the yawed forward vector around the right axis (pitch)
+    // Rotate the yawed forward vector around the right axis (pitch)
     Matrix pitchRotation = MatrixRotate(right, pitch);
     Vector3 forwardRotated = Vector3Transform(forwardYawed, pitchRotation);
 
-// Update the camera target
+    // Update the camera target
     camera->target = Vector3Add(camera->position, forwardRotated);
 
 }
@@ -74,8 +77,8 @@ void camera_move(Camera3D *camera) {
 int main(void) {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 1100;
-    const int screenHeight = 750;
+    const int screenWidth = 1800;
+    const int screenHeight = 1000;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
@@ -91,28 +94,50 @@ int main(void) {
     camera.fovy = 45.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;
 
-    float z = 10;
     Model m = LoadModel("../models/fancycube.obj");
+
+    double x = 0.1; 
+
+    double y = 0;
+
+    double z = 0; 
+
+    double a = 10.0;
+
+    double b = 28.0;
+
+    double c = 8.0 / 3.0;
+
+    double t = 0.01; 
+
+    //Lorenz_sys *system = init(a,b,c,t,x,y,z);
+    int systems_amount = 10;
+    Lorenz_sys **systems = (Lorenz_sys**)MemAlloc(sizeof(Lorenz_sys*) * 3);
+
+    for (int i = 0; i < systems_amount; i++) {
+        systems[i] = init(a,b-(i/5.0f),c+i,t,x,y+(i/20.0f),z);
+    }
+
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         BeginDrawing();
 
         ClearBackground(BLACK);
         BeginMode3D(camera);
-
         camera_move(&camera);
 
-        DrawCube((Vector3) {0, 10, 0}, 10, 10, 10, WHITE);
-        DrawCubeWires((Vector3) {0, 10, 0}, 10, 10, 10, RED);
-        DrawPlane((Vector3) {0, -1, 0}, (Vector2) {100, 100}, ColorTint(BLUE, GREEN));
+
         DrawGrid(1000, 10);
+        for (int i = 0; i < systems_amount; i++) {
+            Lorenz_sys *iter = systems[i];
+            progress(iter, 1);
+            double x1 = iter->x;
+            double y1 = iter->y;
+            double z1 = iter->z;
+            DrawSphere((Vector3){x1,y1,z1}, 3,RED);
+            TraceLog(LOG_INFO,"Lorenz nums: %lf %lf %lf",x1,y1,z1);
+        }
 
-        DrawModel(m, (Vector3) {15, 10, 15}, 5, SKYBLUE);
-        DrawModelWires(m, (Vector3) {15, 10, 15}, 5, RED);
-
-
-        DrawSphere((Vector3) {-15, 10, 0}, 5, PURPLE);
-        DrawSphereWires((Vector3) {-15, 10, 0}, 5, 50, 50, RED);
 
         EndMode3D();
 
