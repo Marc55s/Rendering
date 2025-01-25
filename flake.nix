@@ -37,6 +37,7 @@
                     export CFLAGS="-I${pkgs.raylib}/include"
                     export LDFLAGS="-L${pkgs.raylib}/lib"
                     export C_INCLUDE_PATH=/nix/store/isxsfmzsxsh1xa3lyh66zkv8w0qziai8-clang-19.1.5-lib/lib/clang/19/include
+                    export TEST_VAR=${pkgs.gcc}
                     echo "Welcome to the development shell with GCC, Make, CMake and Raylib!";
                 '';
             };
@@ -53,6 +54,9 @@
                     export CC=${pkgs.gcc}/bin/gcc
                     export RAYLIB_INCLUDE=${pkgs.raylib}/include
                     export RAYLIB_LIB=${pkgs.raylib}/lib
+                    export CFLAGS="-I${pkgs.raylib}/include"
+                    export LDFLAGS="-L${pkgs.raylib}/lib"
+                    export C_INCLUDE_PATH=/nix/store/isxsfmzsxsh1xa3lyh66zkv8w0qziai8-clang-19.1.5-lib/lib/clang/19/include
                 '';
 
                 buildInputs = [ pkgs.raylib pkgs.cmake pkgs.gcc pkgs.gnumake 
@@ -66,9 +70,7 @@
                     pkgs.xorg.libXrandr ];
 
                 buildPhase = ''
-                    mkdir -p build
-                    cd build
-                    cmake ..
+                    cmake .
                     make
                 '';
                 installPhase = ''
