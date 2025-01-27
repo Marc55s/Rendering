@@ -15,7 +15,6 @@ Lorenz_sys *init(double sig, double rho, double beta,double time, double x, doub
 
 void progress(Lorenz_sys *system, int iterations) {
     // position
-    
     double x = system->x;
     double y = system->y;
     double z = system->z;
