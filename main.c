@@ -84,7 +84,7 @@ int main(void) {
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
-    // Main game loop
+    // Main game loopColorTint(GOLD, BLUE)
     // Define the camera to look into our 3d world
     Camera3D camera = {0};
     camera.position = (Vector3) {-10.0f, 5.0f, -20.0f}; // Camera position
@@ -100,20 +100,20 @@ int main(void) {
     double z = -1;
     double t = 0.01; 
 
-
-    //Lorenz_sys *system = init(a,b,c,t,x,y,z);
-    int systems_amount = 1000;
-    int points = 100;
+    int systems_amount = 10;
+    int points = 10000;
     Lorenz_sys **systems = (Lorenz_sys**) MemAlloc(sizeof(Lorenz_sys*) * systems_amount);
 
+    Color color[systems_amount];
     for (int i = 0; i < systems_amount; i++) {
         systems[i] = init(GetRandomValue(4, 26), GetRandomValue(10, 30), GetRandomValue(0, 10),t,x,y,z,points);
+        color[i] = (Color){1*GetRandomValue(10,255),1*GetRandomValue(10,255),1*GetRandomValue(10,255),1*GetRandomValue(10,255)};
     }
 
 
     TraceLog(LOG_INFO, "Starting Parameters %d %d %d %lf %lf %lf %lf",GetRandomValue(5, 20), GetRandomValue(10, 30), GetRandomValue(0, 10),t,x,y,z);
 
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -121,24 +121,24 @@ int main(void) {
         BeginMode3D(camera);
         camera_move(&camera);
 
-        DrawGrid(100, 100);
+        DrawGrid(100, 10);
 
         for (int i = 0; i < systems_amount; i++) {
-            
-            DrawLorenzSystem(systems[i], points, GOLD);
+            DrawLorenzSystem(systems[i], points, color[i]);
             updateLines(systems[i]);
         }
 
         EndMode3D();
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+
+    for (int i = 0; i < systems_amount; i++) {
+        MemFree(systems[i]);
+    }
+    MemFree(systems);
 
     return 0;
 }
